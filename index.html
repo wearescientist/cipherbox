@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>凭据工作台</title>
+        <title>Credential Vault</title>
         <style>
             :root {
                 --bg: #0b0f18;
@@ -323,31 +323,58 @@
             }
 
             .auth {
-                min-height: calc(100vh - 24px);
+                min-height: 100vh;
                 display: grid;
                 place-items: center;
-            }
-            .auth-shell {
-                width: min(960px, 100%);
-                display: grid;
-                gap: 14px;
-            }
-            .auth-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 12px;
-            }
-            .card {
                 padding: 20px;
             }
-            .card h2 {
-                margin: 0;
-                font-size: 21px;
+            .auth-shell {
+                width: 100%;
+                max-width: 420px;
+                display: grid;
+                gap: 24px;
             }
-            .card p {
-                margin: 8px 0 0;
+            .auth-header {
+                text-align: center;
+                display: grid;
+                gap: 6px;
+            }
+            .auth-header .logo {
+                width: 52px;
+                height: 52px;
+                border-radius: 16px;
+                font-size: 20px;
+                margin: 0 auto;
+            }
+            .auth-header h1 {
+                margin: 6px 0 0;
+                font-size: 22px;
+                letter-spacing: -0.02em;
+            }
+            .auth-header p {
+                margin: 4px 0 0;
                 color: var(--muted);
-                line-height: 1.65;
+                font-size: 13px;
+                line-height: 1.5;
+            }
+            .auth-card {
+                background: var(--panel);
+                border: 1px solid var(--line);
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-strong);
+                backdrop-filter: blur(14px) saturate(120%);
+                -webkit-backdrop-filter: blur(14px) saturate(120%);
+                padding: 28px 24px 24px;
+            }
+            .auth-card h2 {
+                margin: 0 0 4px;
+                font-size: 17px;
+            }
+            .auth-card .desc {
+                margin: 0 0 18px;
+                color: var(--muted);
+                font-size: 12px;
+                line-height: 1.55;
             }
             .stack {
                 display: grid;
@@ -357,24 +384,82 @@
                 display: grid;
                 gap: 14px;
             }
-            .authTop {
+            .auth-footer {
+                text-align: center;
+                font-size: 13px;
+                color: var(--muted);
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
-                gap: 10px;
-                flex-wrap: wrap;
-                padding: 0 2px;
-            }
-            .authTitle {
-                display: grid;
+                justify-content: center;
                 gap: 4px;
+                flex-wrap: wrap;
             }
-            .authTitle strong {
-                font-size: 14px;
+            .auth-footer button {
+                border: none;
+                background: transparent;
+                color: var(--accent);
+                padding: 0 2px;
+                font-size: 13px;
+                cursor: pointer;
+                text-decoration: underline;
+                text-underline-offset: 2px;
+                min-height: auto;
+                box-shadow: none;
             }
-            .authTitle span {
-                font-size: 12px;
+            .auth-footer button:hover {
+                color: var(--text);
+            }
+            .auth-theme-row {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 12px 0 0;
+                border-top: 1px solid var(--line);
+                margin-top: 20px;
+            }
+            .auth-theme-row .themeChip {
+                min-height: 30px;
+                padding: 0 10px;
+                border-radius: 10px;
+                border: 1px solid var(--line);
+                background: var(--chip-bg);
                 color: var(--muted);
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 11px;
+                font-weight: 700;
+                transition: all 0.22s ease;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+                cursor: pointer;
+            }
+            .auth-theme-row .themeChip:hover {
+                transform: translateY(-1px);
+                border-color: var(--line-strong);
+                background: var(--chip-hover);
+                color: var(--text);
+            }
+            .auth-theme-row .themeChip.active {
+                color: var(--accentText);
+                background: linear-gradient(
+                    180deg,
+                    var(--accent),
+                    var(--accent2)
+                );
+                border-color: color-mix(
+                    in srgb,
+                    var(--accent) 58%,
+                    transparent
+                );
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            }
+            .auth-note {
+                text-align: center;
+                font-size: 11px;
+                color: var(--muted);
+                line-height: 1.5;
+                opacity: 0.75;
             }
 
             .type-tabs {
@@ -478,15 +563,33 @@
                 );
                 box-shadow: 0 12px 22px rgba(0, 0, 0, 0.14);
             }
+            .panel-head {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 16px 18px 8px;
+                border-bottom: 1px solid var(--line);
+            }
+            .panel-head .title {
+                font-size: 15px;
+                font-weight: 900;
+                letter-spacing: 0.03em;
+                text-transform: uppercase;
+                color: var(--text);
+            }
             .editorHead {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 2px 0;
+                padding: 16px 18px 8px;
+                border-bottom: 1px solid var(--line);
             }
             .editorHead .title {
-                font-size: 14px;
-                font-weight: 800;
+                font-size: 15px;
+                font-weight: 900;
+                letter-spacing: 0.03em;
+                text-transform: uppercase;
+                color: var(--text);
             }
             .item-title {
                 font-size: 13px;
@@ -1598,12 +1701,69 @@
         <div class="page">
             <section id="authView" class="auth">
                 <div class="auth-shell">
-                    <div class="authTop">
-                        <div class="authTitle">
-                            <strong>凭据工作台</strong>
-                            <span>默认黑客 · 三主题可切换</span>
+                    <!-- 品牌头部 -->
+                    <div class="auth-header">
+                        <div class="logo">CV</div>
+                        <h1>Credential Vault</h1>
+                        <p>本地加密 · 离线使用 · AES-256-GCM</p>
+                    </div>
+
+                    <!-- 卡片表单 -->
+                    <div class="auth-card">
+                        <!-- 解锁面板（默认显示） -->
+                        <div id="unlockPane">
+                            <h2>解锁保险库</h2>
+                            <p class="desc">
+                                已有数据直接解锁，也可以导入加密备份。
+                            </p>
+                            <div class="stack">
+                                <input
+                                    id="unlockPassword"
+                                    type="password"
+                                    placeholder="主密码"
+                                />
+                                <button id="unlockBtn" class="btn primary">
+                                    解锁 <span class="kbd">Enter</span>
+                                </button>
+                                <button id="importBackupBtnAuth" class="btn">
+                                    导入加密备份
+                                </button>
+                            </div>
                         </div>
-                        <div class="themeSwitch">
+
+                        <div id="authStatus" class="status hidden"></div>
+
+                        <!-- 创建面板（初始隐藏） -->
+                        <div id="createPane" class="hidden">
+                            <h2>创建保险库</h2>
+                            <p class="desc">
+                                首次使用请设置主密码，数据本地加密保存。
+                            </p>
+                            <div class="stack">
+                                <input
+                                    id="createPassword"
+                                    type="password"
+                                    placeholder="主密码"
+                                />
+                                <input
+                                    id="createPassword2"
+                                    type="password"
+                                    placeholder="确认主密码"
+                                />
+                                <button id="createVaultBtn" class="btn primary">
+                                    创建并进入 <span class="kbd">Enter</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 底部切换链接 -->
+                        <div class="auth-footer">
+                            <span id="authSwitchHint">还没有保险库？</span>
+                            <button id="authSwitchBtn">创建新保险库</button>
+                        </div>
+
+                        <!-- 主题切换 -->
+                        <div class="auth-theme-row">
                             <button class="themeChip" data-theme="prism">
                                 <span
                                     class="themeDot"
@@ -1646,68 +1806,8 @@
                         </div>
                     </div>
 
-                    <div class="auth-grid">
-                        <div class="card stackLg">
-                            <div>
-                                <h2>创建保险库</h2>
-                                <p>
-                                    只保留四类关系，每条只填两栏。数据本地加密保存。
-                                </p>
-                            </div>
-                            <div class="stack">
-                                <input
-                                    id="createPassword"
-                                    type="password"
-                                    placeholder="主密码"
-                                />
-                                <input
-                                    id="createPassword2"
-                                    type="password"
-                                    placeholder="确认主密码"
-                                />
-                                <button id="createVaultBtn" class="btn primary">
-                                    创建并进入 <span class="kbd">Enter</span>
-                                </button>
-                            </div>
-                            <div class="footerNote">
-                                建议主密码至少 8
-                                位。切换主题不会影响本地保险库数据。
-                            </div>
-                        </div>
-
-                        <div class="card stackLg">
-                            <div>
-                                <h2>解锁 / 导入</h2>
-                                <p>
-                                    已有数据就直接解锁。也可以导入之前导出的加密备份。
-                                </p>
-                            </div>
-                            <div class="stack">
-                                <input
-                                    id="unlockPassword"
-                                    type="password"
-                                    placeholder="主密码"
-                                />
-                                <button id="unlockBtn" class="btn primary">
-                                    解锁 <span class="kbd">Enter</span>
-                                </button>
-                                <div class="row">
-                                    <button
-                                        id="importBackupBtnAuth"
-                                        class="btn"
-                                    >
-                                        导入加密备份
-                                    </button>
-                                </div>
-                                <div
-                                    id="authStatus"
-                                    class="status hidden"
-                                ></div>
-                            </div>
-                            <div class="footerNote">
-                                主题会自动记忆。当前工具保持单文件结构，便于你直接继续塞功能。
-                            </div>
-                        </div>
+                    <div class="auth-note">
+                        建议主密码至少 8 位 · 离线使用 · AES-256-GCM 加密
                     </div>
                 </div>
             </section>
@@ -1715,9 +1815,9 @@
             <section id="appView" class="hidden">
                 <div class="topbar">
                     <div class="brand">
-                        <div class="logo">凭</div>
+                        <div class="logo">CV</div>
                         <div>
-                            <h1 class="navCursor">凭据工作台</h1>
+                            <h1 class="navCursor">Credential Vault</h1>
                             <p>四类关系 · 两栏录入 · 支持批量导入</p>
                         </div>
                     </div>
@@ -1782,10 +1882,34 @@
                     <section class="panel">
                         <div class="search">
                             <div class="searchRow">
-                                <input
-                                    id="searchInput"
-                                    placeholder="搜索左栏内容…"
-                                />
+                                <div
+                                    style="
+                                        position: relative;
+                                        flex: 1;
+                                        display: flex;
+                                        align-items: center;
+                                    "
+                                >
+                                    <input
+                                        id="searchInput"
+                                        placeholder="搜索左栏内容…"
+                                    />
+                                    <button
+                                        id="searchClearBtn"
+                                        class="btn small"
+                                        style="
+                                            position: absolute;
+                                            right: 4px;
+                                            padding: 4px 8px;
+                                            min-height: 26px;
+                                            border-radius: 8px;
+                                            display: none;
+                                        "
+                                        title="清空搜索"
+                                    >
+                                        ✕
+                                    </button>
+                                </div>
                                 <div id="listCount" class="countPill">0</div>
                             </div>
                         </div>
@@ -1796,6 +1920,9 @@
                     </section>
 
                     <section class="panel">
+                        <div class="panel-head">
+                            <span class="title">▎卡片详情</span>
+                        </div>
                         <div class="body">
                             <div id="detailEmpty" class="empty">
                                 从左侧列表选择一条，或点右侧「新建」。
@@ -1867,11 +1994,11 @@
                     </section>
 
                     <section class="panel">
+                        <div class="editorHead">
+                            <span class="title">▎新建 / 编辑</span>
+                            <span class="kbd">Ctrl+N</span>
+                        </div>
                         <div class="body stackLg">
-                            <div class="editorHead">
-                                <span class="title">新建 / 编辑</span>
-                                <span class="kbd">Ctrl+N</span>
-                            </div>
                             <div class="type-tabs" id="editorTypeToggle"></div>
                             <div class="modeRow">
                                 <button
@@ -2039,6 +2166,37 @@
                     toast: document.getElementById("toast"),
                     listCount: document.getElementById("listCount"),
                 };
+
+                // ===== 认证页面：登录 / 注册面板切换 =====
+                const authSwitchBtn = document.getElementById("authSwitchBtn");
+                const authSwitchHint =
+                    document.getElementById("authSwitchHint");
+                const unlockPane = document.getElementById("unlockPane");
+                const createPane = document.getElementById("createPane");
+                let showingCreate = false;
+
+                function toggleAuthPane(showCreate) {
+                    showingCreate = showCreate;
+                    unlockPane.classList.toggle("hidden", showCreate);
+                    createPane.classList.toggle("hidden", !showCreate);
+                    authSwitchHint.textContent = showCreate
+                        ? "已有保险库？"
+                        : "还没有保险库？";
+                    authSwitchBtn.textContent = showCreate
+                        ? "去解锁"
+                        : "创建新保险库";
+                    // 隐藏状态条
+                    const st = document.getElementById("authStatus");
+                    if (st) {
+                        st.textContent = "";
+                        st.classList.add("hidden");
+                    }
+                }
+
+                authSwitchBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    toggleAuthPane(!showingCreate);
+                });
 
                 function now() {
                     return Date.now();
@@ -2373,6 +2531,13 @@
                             unlockVault();
                             return;
                         }
+                        // 焦点不在输入框时，自动判断：有创建密码则创建，否则解锁
+                        e.preventDefault();
+                        if (el.createPassword.value) {
+                            createVault();
+                        } else {
+                            unlockVault();
+                        }
                     }
                     if (
                         e.target.tagName === "INPUT" ||
@@ -2571,9 +2736,12 @@
                     try {
                         navigator.clipboard.writeText("");
                     } catch {}
+                    // 清空认证页面密码框
+                    el.createPassword.value = "";
+                    el.createPassword2.value = "";
+                    el.unlockPassword.value = "";
                     el.appView.classList.add("hidden");
                     el.authView.classList.remove("hidden");
-                    el.unlockPassword.value = "";
                     clearEditor();
                     showStatus(message, true);
                 }
@@ -2762,6 +2930,14 @@
                     el.singleLeftInput.value = item.left || "";
                     el.singleRightInput.value = item.right || "";
                     renderAll();
+                    // 滚动到编辑器区域
+                    const editorPanel = el.singleLeftInput.closest(".panel");
+                    if (editorPanel) {
+                        editorPanel.scrollIntoView({
+                            behavior: "smooth",
+                            block: "nearest",
+                        });
+                    }
                     showToast("已载入右侧。");
                 }
 
@@ -2774,6 +2950,32 @@
                             x.type === state.currentType,
                     );
                 }
+
+                let deleteConfirmPending = false;
+                async function deleteSelected() {
+                    const id = state.selectedId;
+                    if (!id) return;
+                    if (!deleteConfirmPending) {
+                        deleteConfirmPending = true;
+                        showStatus("再次点击「删除」确认删除。");
+                        setTimeout(() => {
+                            deleteConfirmPending = false;
+                            clearStatus();
+                        }, 4000);
+                        return;
+                    }
+                    deleteConfirmPending = false;
+                    state.data.items = state.data.items.filter(
+                        (x) => x.id !== id,
+                    );
+                    state.selectedId = null;
+                    state.editingId = null;
+                    clearEditor();
+                    await persist();
+                    renderAll();
+                    showStatus("已删除。");
+                }
+
                 async function saveSingle() {
                     const left = el.singleLeftInput.value.trim();
                     const right = el.singleRightInput.value.trim();
@@ -2807,33 +3009,10 @@
                     await persist();
                     state.revealLeft = false;
                     state.revealRight = false;
+                    state.editingId = null; // 保存后退出编辑模式，回到查看
+                    clearEditor();
                     renderAll();
                     showStatus("已保存。");
-                }
-
-                let deleteConfirmPending = false;
-                async function deleteSelected() {
-                    const id = state.selectedId;
-                    if (!id) return;
-                    if (!deleteConfirmPending) {
-                        deleteConfirmPending = true;
-                        showStatus("再次点击「删除」确认删除。");
-                        setTimeout(() => {
-                            deleteConfirmPending = false;
-                            clearStatus();
-                        }, 4000);
-                        return;
-                    }
-                    deleteConfirmPending = false;
-                    state.data.items = state.data.items.filter(
-                        (x) => x.id !== id,
-                    );
-                    state.selectedId = null;
-                    state.editingId = null;
-                    clearEditor();
-                    await persist();
-                    renderAll();
-                    showStatus("已删除。");
                 }
 
                 function parseBatchLine(line) {
@@ -3038,9 +3217,32 @@
                     .addEventListener("click", () => {
                         el.batchInput.value = "";
                     });
+                const searchClearBtn =
+                    document.getElementById("searchClearBtn");
                 el.searchInput.addEventListener("input", (e) => {
                     state.search = e.target.value;
+                    searchClearBtn.style.display = e.target.value
+                        ? "block"
+                        : "none";
                     renderList();
+                });
+                searchClearBtn.addEventListener("click", () => {
+                    el.searchInput.value = "";
+                    state.search = "";
+                    searchClearBtn.style.display = "none";
+                    renderList();
+                    el.searchInput.focus();
+                });
+                // 搜索框按 Escape 清空搜索内容
+                el.searchInput.addEventListener("keydown", (e) => {
+                    if (e.key === "Escape") {
+                        e.preventDefault();
+                        el.searchInput.value = "";
+                        state.search = "";
+                        searchClearBtn.style.display = "none";
+                        renderList();
+                        el.searchInput.blur();
+                    }
                 });
                 el.leftRevealBtn.addEventListener("click", () =>
                     reveal("left"),
@@ -3061,8 +3263,12 @@
 
                 loadTheme();
 
+                // 检测到已有数据时，确保默认显示解锁面板
                 if (loadVaultBlob()) {
                     showStatus("检测到本地保险库，可直接解锁。", true);
+                } else {
+                    // 没有数据时，直接显示注册面板
+                    toggleAuthPane(true);
                 }
             })();
         </script>
